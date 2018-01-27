@@ -8,7 +8,7 @@ describe('TimeFormat', () => {
   });
 
   it('should be initialized', () => {
-    expect(timeFormat).not.toBeUndefined();
+    expect(timeFormat).toBeDefined();
   });
 
   it('should return 0 hours', () => {

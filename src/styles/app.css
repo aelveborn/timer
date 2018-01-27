@@ -19,6 +19,7 @@ html, body, #root {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -27,4 +28,27 @@ html, body, #root {
   font-size: 164px;
   color: #fff;
   text-shadow: 0px 1px 2px #000;
+  cursor: default;
+}
+
+.title input{
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  width: 650px;
+
+  font-size: 48px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0px 1px 2px #000;
+  outline: none;
+  transition: all 0.4s linear;
+}
+
+.title input:focus {
+  color: #333;
+  background-color: #fff;
+  text-shadow: none;
+  box-shadow: 0px 1px 2px #000;
 }
