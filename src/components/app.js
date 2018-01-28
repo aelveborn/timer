@@ -32,7 +32,7 @@ class App extends Component {
     this.setState(prevState => ({
       seconds: prevState.seconds + 1
     }));
-    document.title = this.timeFormat.displayTime(this.state.seconds) + ' - ' + this.state.title;
+    document.title = this.timeFormat.displayTime(this.state.seconds) + ' – ' + this.state.title;
   }
 
   getStoredData() {
