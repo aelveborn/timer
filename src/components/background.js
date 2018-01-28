@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 
 class Timer extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.setBackground();
   }
@@ -31,7 +27,7 @@ class Timer extends Component {
     return (
       <div>
         <div className="backgroundControls">
-          <a href="#" className="backgroundButton" onClick={(event) => this.handleClick(event)}>
+          <a href="#random-image" className="backgroundButton" onClick={(event) => this.handleClick(event)}>
             <i className="fa fa-picture-o" aria-hidden="true"></i>
           </a>
         </div>

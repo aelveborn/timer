@@ -102,7 +102,7 @@ class App extends Component {
           <Timer seconds={this.state.seconds} />
 
           <div className="reset">
-            <a href="#" className="defaultButton" onClick={(event) => this.handleReset(event)}>Reset timer</a>
+            <a href="#reset-timer" className="defaultButton" onClick={(event) => this.handleReset(event)}>Reset timer</a>
           </div>
 
         </div>
