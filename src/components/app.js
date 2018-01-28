@@ -82,7 +82,8 @@ class App extends Component {
     this.storage.set(data);
     
     this.setState({
-      seconds: 0
+      seconds: 0,
+      timestamp: ts
     });
 
     event.preventDefault();
