@@ -3,12 +3,11 @@ body {
   padding: 0;
   font-family: 'Open Sans', sans-serif;
 
-  background-image: url(https://source.unsplash.com/1920x1200) ;
   background-position: center center;
   background-repeat:  no-repeat;
   background-attachment: fixed;
   background-size:  cover;
-  background-color: #fff;
+  background-color: rgb(29, 29, 29);
 }
 
 html, body, #root {
@@ -16,39 +15,107 @@ html, body, #root {
 }
 
 .app {
+  height: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
+}
+
+.content {
+  z-index: 2;
+  display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100%;
+}
+
+.mask {
+  z-index: 1;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  
+  opacity: 1;
+  transition-property: opacity;
+  transition-timing-function: linear;
+  background-color: rgb(29, 29, 29);
 }
 
 .timer {
+  color: #fff;
   font-weight: 400;
   font-size: 164px;
-  color: #fff;
   text-shadow: 0px 1px 2px #000;
+
   cursor: default;
 }
 
 .title input{
+  width: 650px;
+  padding: 10px 20px;
   background: none;
   border: none;
-  padding: 10px 20px;
-  width: 650px;
 
+  color: #fff;
   font-size: 48px;
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
   text-align: center;
   text-shadow: 0px 1px 2px #000;
+
   outline: none;
   transition: all 0.4s linear;
 }
 
-.title input:focus {
+.title input:focus,
+.title input:hover {
   color: #333;
-  background-color: #fff;
   text-shadow: none;
+  background-color: #fff;
   box-shadow: 0px 1px 2px #000;
+}
+
+.reset {
+  margin-top: 20px;
+}
+
+.backgroundControls {
+  z-index: 2;
+  position: absolute;
+  top: 0; right: 0;
+}
+
+.backgroundButton {
+  color: #fff;
+  display: block;
+  padding: 15px 25px;
+  font-size: 24px;
+}
+
+.defaultButton {
+  display: block;
+  padding: 15px 25px;
+  margin-bottom: 1px;
+  border: solid 1px #fff;
+  background-color: transparent;
+
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0px 1px 2px #000;
+
+  transition: all 0.2s linear;
+}
+
+.defaultButton:hover {
+  color: #333;
+  text-shadow: none;
+  background-color: #fff;
+  box-shadow: 0px 1px 2px #000;
+}
+
+.defaultButton:active {
+  margin-bottom: 0;
+  margin-top: 1px;
+  box-shadow: none;
+  transition: none;
 }
