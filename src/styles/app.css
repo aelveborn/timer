@@ -119,3 +119,23 @@ html, body, #root {
   box-shadow: none;
   transition: none;
 }
+
+@media (max-width: 840px) {
+  .timer {
+    font-size: 124px;
+  }
+  .title input{
+    width: 540px;
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 620px) {
+  .timer {
+    font-size: 80px;
+  }
+  .title input{
+    width: 340px;
+    font-size: 24px;
+  }
+}
