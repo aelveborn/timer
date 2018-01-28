@@ -16,6 +16,7 @@ class App extends Component {
 
     this.state = {
       title: storedData.title,
+      timestamp: storedData.timestamp,
       seconds: this.currentTimestamp() - storedData.timestamp
     };
   }
@@ -30,7 +31,7 @@ class App extends Component {
 
   tick() {
     this.setState(prevState => ({
-      seconds: prevState.seconds + 1
+      seconds: this.currentTimestamp() - prevState.timestamp
     }));
     document.title = this.timeFormat.displayTime(this.state.seconds) + ' – ' + this.state.title;
   }
