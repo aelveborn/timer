@@ -6,13 +6,14 @@ import Background from './background';
 import PlayControls from './playControls';
 import * as Constants from '../utils/constants';
 
+const defaultTitle = 'Give your timer a name';
+
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.storage = new Storage();
     this.timeFormat = new TimeFormat();
-    this.defaultTitle = 'Give your timer a name';
 
     this.initStorage();
 
@@ -48,7 +49,7 @@ class App extends Component {
     let data = this.storage.get();
     if (!data) {
       data = {
-        title: this.defaultTitle,
+        title: defaultTitle,
         timestamp: this.currentTimestamp(), // Started timestamp in seconds
         history: 0,                         // History in seconds
         status: Constants.STATUS_RUNNING    // STATUS_RUNNING / STATUS_PAUSED
@@ -152,9 +153,16 @@ class App extends Component {
   handleTitleBlur(event) {
     let value = event.target.value;
     if(value === '') {
-      value = this.defaultTitle;
+      value = defaultTitle;
     }
     this.setTitle(value);
+  }
+
+  handleTitleFocus(event) {
+    let value = event.target.value;
+    if(value === defaultTitle) {
+      this.setTitle('');
+    }
   }
 
   handleReset(event) {
@@ -181,7 +189,8 @@ class App extends Component {
             <input type="text" 
               value={this.state.title} 
               onChange={(event) => this.handleTitleChange(event)} 
-              onBlur={(event) => this.handleTitleBlur(event)} />
+              onBlur={(event) => this.handleTitleBlur(event)}
+              onFocus={(event) => this.handleTitleFocus(event)} />
           </div>
 
           <Timer seconds={this.state.displaySeconds} />
