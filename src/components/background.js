@@ -13,7 +13,7 @@ class Timer extends Component {
       document.getElementById('backgroundMask').style.transitionDuration = "2s";
       document.getElementById('backgroundMask').style.opacity = "0";
     };
-    downloadingImage.src = 'https://source.unsplash.com/collection/1657989/1920x1200&ts=' + Date.now();
+    downloadingImage.src = 'https://source.unsplash.com/collection/1657989&ts=' + Date.now();
   }
 
   handleClick(event) {

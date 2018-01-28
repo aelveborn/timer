@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.storage = new Storage();
     this.timeFormat = new TimeFormat();
-    this.defaultTitle = 'Hi there, type a name here';
+    this.defaultTitle = 'Give your timer a name';
 
     this.initStorage();
 
@@ -44,6 +44,19 @@ class App extends Component {
     this.stopTimer();
   }
 
+  initStorage() {
+    let data = this.storage.get();
+    if (!data) {
+      data = {
+        title: this.defaultTitle,
+        timestamp: this.currentTimestamp(), // Started timestamp in seconds
+        history: 0,                         // History in seconds
+        status: Constants.STATUS_RUNNING    // STATUS_RUNNING / STATUS_PAUSED
+      }
+      this.storage.set(data);
+    }
+  }
+
   startTimer() {
     this.interval = setInterval(() => this.tick(), 1000);
   }
@@ -70,22 +83,19 @@ class App extends Component {
   }
 
   pause() {
-    // TODO: Something is wrong here. NaN
     this.stopTimer();
+    this.updateDisplay();
 
     let storedData = this.storage.get();
     storedData.history += this.currentTimestamp() - storedData.timestamp;
     storedData.status = Constants.STATUS_PAUSED;
     this.storage.set(storedData);
-    
+
     this.setState({
       timer: {
-        historyInSeconds: storedData.history,
         status: storedData.status
       }
     });
-
-    // this.updateDisplay();
   }
 
   reset() {
@@ -120,19 +130,6 @@ class App extends Component {
     this.updateDisplay();
   }
 
-  initStorage() {
-    let data = this.storage.get();
-    if (!data) {
-      data = {
-        title: this.defaultTitle,
-        timestamp: this.currentTimestamp(), // Started timestamp in seconds
-        history: 0,                         // History in seconds
-        status: Constants.STATUS_RUNNING    // STATUS_RUNNING / STATUS_PAUSED
-      }
-      this.storage.set(data);
-    }
-  }
-
   setTitle(value) {
     this.setState({
       title: value
@@ -164,15 +161,6 @@ class App extends Component {
     this.reset();
     event.preventDefault();
   }
-
-  // handlePlayControl(event) {
-  //   if(this.state.timer.status === Constants.STATUS_RUNNING) {
-  //     this.pause();
-  //   } else {
-  //     this.resume();
-  //   }
-  //   event.preventDefault();
-  // }
 
   handleResume(event) {
     this.resume();

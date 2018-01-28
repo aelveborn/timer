@@ -20,6 +20,17 @@ class PlayControls extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    let controlText = TEXT_RESUME;
+    if(nextProps.status === Constants.STATUS_RUNNING) {
+      controlText = TEXT_PAUSE;
+    }
+
+    this.setState({
+      controlText
+    });
+  }
+
   handlePlayControl(event) {
     if(this.props.status === Constants.STATUS_RUNNING) {
       this.props.onPause(event);
