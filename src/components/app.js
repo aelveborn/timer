@@ -3,6 +3,8 @@ import Timer from './timer';
 import TimeFormat from '../utils/timeFormat';
 import Storage from '../utils/storage';
 import Background from './background';
+import PlayControls from './playControls';
+import * as Constants from '../utils/constants';
 
 class App extends Component {
 
@@ -12,40 +14,123 @@ class App extends Component {
     this.timeFormat = new TimeFormat();
     this.defaultTitle = 'Hi there, type a name here';
 
-    let storedData = this.getStoredData();
+    this.initStorage();
+
+    let storedData = this.storage.get();
+    let display = storedData.history;
+    if(storedData.status === Constants.STATUS_RUNNING) {
+      display += this.currentTimestamp() - storedData.timestamp;
+    }
 
     this.state = {
       title: storedData.title,
-      timestamp: storedData.timestamp,
-      seconds: this.currentTimestamp() - storedData.timestamp
+      displaySeconds: display,
+      timer: {
+        startedTimestamp: storedData.timestamp,
+        historyInSeconds: storedData.history,
+        status: storedData.status
+      }
     };
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 1000);
+    if(this.state.timer.status === Constants.STATUS_RUNNING) {
+      this.startTimer();
+    }
   }
 
   componentWillUnmount() {
+    // Should not pause or save state, only clear interval
+    this.stopTimer();
+  }
+
+  startTimer() {
+    this.interval = setInterval(() => this.tick(), 1000);
+  }
+
+  stopTimer() {
     clearInterval(this.interval);
   }
 
-  tick() {
-    this.setState(prevState => ({
-      seconds: this.currentTimestamp() - prevState.timestamp
-    }));
-    document.title = this.timeFormat.displayTime(this.state.seconds) + ' – ' + this.state.title;
+  resume() {
+    let storedData = this.storage.get();
+    storedData.timestamp = this.currentTimestamp();
+    storedData.status = Constants.STATUS_RUNNING;
+    this.storage.set(storedData);
+
+    this.setState({
+      timer: {
+        startedTimestamp: storedData.timestamp,
+        historyInSeconds: storedData.history,
+        status: storedData.status
+      }
+    });
+    
+    this.startTimer();
   }
 
-  getStoredData() {
+  pause() {
+    // TODO: Something is wrong here. NaN
+    this.stopTimer();
+
+    let storedData = this.storage.get();
+    storedData.history += this.currentTimestamp() - storedData.timestamp;
+    storedData.status = Constants.STATUS_PAUSED;
+    this.storage.set(storedData);
+    
+    this.setState({
+      timer: {
+        historyInSeconds: storedData.history,
+        status: storedData.status
+      }
+    });
+
+    // this.updateDisplay();
+  }
+
+  reset() {
+    let storedData = this.storage.get();
+    storedData.timestamp = this.currentTimestamp();
+    storedData.history = 0;
+    storedData.status = Constants.STATUS_RUNNING;
+    this.storage.set(storedData);
+
+    if(this.state.timer.status === Constants.STATUS_PAUSED) {
+      this.startTimer();
+    }
+    
+    this.setState({
+      displaySeconds: 0,
+      timer: {
+        startedTimestamp: storedData.timestamp,
+        historyInSeconds: storedData.history,
+        status: storedData.status
+      }
+    });
+  }
+
+  updateDisplay() {
+    this.setState(prevState => ({
+      displaySeconds: prevState.timer.historyInSeconds + (this.currentTimestamp() - prevState.timer.startedTimestamp)
+    }));
+    document.title = this.timeFormat.displayTime(this.state.displaySeconds) + ' – ' + this.state.title;
+  }
+
+  tick() {
+    this.updateDisplay();
+  }
+
+  initStorage() {
     let data = this.storage.get();
     if (!data) {
       data = {
         title: this.defaultTitle,
-        timestamp: this.currentTimestamp()
+        timestamp: this.currentTimestamp(), // Started timestamp in seconds
+        history: 0,                         // History in seconds
+        status: Constants.STATUS_RUNNING    // STATUS_RUNNING / STATUS_PAUSED
       }
       this.storage.set(data);
     }
-    return data;
   }
 
   setTitle(value) {
@@ -53,9 +138,9 @@ class App extends Component {
       title: value
     });
 
-    let data = this.storage.get();
-    data.title = value;
-    this.storage.set(data);
+    let storedData = this.storage.get();
+    storedData.title = value;
+    this.storage.set(storedData);
   }
 
   currentTimestamp() {
@@ -76,16 +161,26 @@ class App extends Component {
   }
 
   handleReset(event) {
-    let ts = this.currentTimestamp();
-    let data = this.storage.get();
-    data.timestamp = ts;
-    this.storage.set(data);
-    
-    this.setState({
-      seconds: 0,
-      timestamp: ts
-    });
+    this.reset();
+    event.preventDefault();
+  }
 
+  // handlePlayControl(event) {
+  //   if(this.state.timer.status === Constants.STATUS_RUNNING) {
+  //     this.pause();
+  //   } else {
+  //     this.resume();
+  //   }
+  //   event.preventDefault();
+  // }
+
+  handleResume(event) {
+    this.resume();
+    event.preventDefault();
+  }
+
+  handlePause(event) {
+    this.pause();
     event.preventDefault();
   }
 
@@ -101,11 +196,11 @@ class App extends Component {
               onBlur={(event) => this.handleTitleBlur(event)} />
           </div>
 
-          <Timer seconds={this.state.seconds} />
-
-          <div className="reset">
-            <a href="#reset-timer" className="defaultButton" onClick={(event) => this.handleReset(event)}>Reset timer</a>
-          </div>
+          <Timer seconds={this.state.displaySeconds} />
+          <PlayControls status={this.state.timer.status}
+            onReset={(event) => this.handleReset(event)}
+            onResume={(event) => this.handleResume(event)}
+            onPause={(event) => this.handlePause(event)} />
 
         </div>
         <Background />

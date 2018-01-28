@@ -72,8 +72,16 @@ html, body, #root {
   box-shadow: 0px 1px 2px #000;
 }
 
-.reset {
+.controls {
   margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.controls .defaultButton {
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 86px;
 }
 
 .backgroundControls {
