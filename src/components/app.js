@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Timer from './timer';
 import TimeFormat from '../utils/timeFormat';
+import Title from './title';
 import Storage from '../utils/storage';
 import Background from './background';
 import PlayControls from './playControls';
@@ -185,14 +186,10 @@ class App extends Component {
       <div className="app">
         <div className="content">
 
-          <div className="title">
-            <input type="text" 
-              value={this.state.title} 
-              onChange={(event) => this.handleTitleChange(event)} 
-              onBlur={(event) => this.handleTitleBlur(event)}
-              onFocus={(event) => this.handleTitleFocus(event)} />
-          </div>
-
+          <Title title={this.state.title}
+            onChange={(event) => this.handleTitleChange(event)}
+            onBlur={(event) => this.handleTitleBlur(event)}
+            onFocus={(event) => this.handleTitleFocus(event)} />
           <Timer seconds={this.state.displaySeconds} />
           <PlayControls status={this.state.timer.status}
             onReset={(event) => this.handleReset(event)}
